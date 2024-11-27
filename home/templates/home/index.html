@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Listy{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Главная страница</h1>
+    
+    <!-- Форма поиска -->
+    <form method="get" action="">
+        <div class="input-group mb-3">
+            <input type="text" name="search" class="form-control" placeholder="Введите название трека" value="{{ query }}">
+            <div class="input-group-append">
+                <button class="btn btn-primary mr-2" type="submit">Поиск</button> <!-- Отступ между кнопками -->
+                {% if query %}
+                    <a href="/" class="btn btn-secondary" style="background-color: #F7F7F7; color: red; border: 1px solid white; ">❌</a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    <!-- Список треков -->
+    {% if tracks %}
+        <div class="row">
+            {% for track in tracks %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img src="{{ track.cover_image.url }}" class="card-img-top" alt="Обложка">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ track.title }}</h5>
+                            <p class="card-text">{{ track.artist }}</p>
+                            <audio controls>
+                                <source src="{{ track.song_file.url }}" type="audio/mpeg">
+                                Ваш браузер не поддерживает аудио.
+                            </audio>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Треков не найдено.</p>
+    {% endif %}
+</div>
+{% endblock %}

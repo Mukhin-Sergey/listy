@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% else %}
+        <h1>Личный кабинет</h1>
+        <p><strong>Ваш никнейм:</strong> {{ user.nickname }}</p>
+
+        <h2>Мои треки</h2>
+        {% if user.tracks.all %}
+            <ul>
+                {% for track in user.tracks.all %}
+                    <li>{{ track.title }} - {{ track.artist }} 
+                        <a href="delete/{{ track.id }}" style="margin: 15px">Удалить</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Вы не загрузили ни одного трека.</p>
+        {% endif %}
+         <!-- Кнопка для загрузки трека -->
+         <a href="{% url 'upload' %}" class="btn btn-primary">Загрузить трек</a>
+
+        <hr class="my-4">
+        <a href="logout/" class="btn btn-danger">Выйти</a>
+    {% endif %}
+</div>
+{% endblock %}

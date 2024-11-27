@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Регистрация и вход{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Регистрация</h1>
+    {% if success %}
+        <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="register">
+        <div class="mb-3">
+            <label for="nickname" class="form-label">Никнейм</label>
+            <input type="text" class="form-control" id="nickname" name="nickname" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Пароль</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+    </form>
+
+    <hr class="my-4">
+
+    <h2>Вход</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="login">
+        <div class="mb-3">
+            <label for="login_nickname" class="form-label">Никнейм</label>
+            <input type="text" class="form-control" id="login_nickname" name="nickname" required>
+        </div>
+        <div class="mb-3">
+            <label for="login_password" class="form-label">Пароль</label>
+            <input type="password" class="form-control" id="login_password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-secondary">Войти</button>
+    </form>
+</div>
+{% endblock %}

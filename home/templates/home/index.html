@@ -7,39 +7,92 @@
     <h1>Главная страница</h1>
     
     <!-- Форма поиска -->
-    <form method="get" action="">
-        <div class="input-group mb-3">
-            <input type="text" name="search" class="form-control" placeholder="Введите название трека" value="{{ query }}">
-            <div class="input-group-append">
-                <button class="btn btn-primary mr-2" type="submit">Поиск</button> <!-- Отступ между кнопками -->
-                {% if query %}
-                    <a href="/" class="btn btn-secondary" style="background-color: #F7F7F7; color: red; border: 1px solid white; ">❌</a>
+    <div class="d-flex justify-content-end">
+        <form method="get" action="" class="w-100" style="max-width: 25rem;">
+            <!-- Поле ввода -->
+            <div class="input-group mb-3">
+                <input 
+                    type="text" 
+                    name="q" 
+                    class="form-control" 
+                    placeholder="Введите название трека или артиста" 
+                    value="{{ search_query }}" 
+                >
+            </div>
+    
+            <!-- Блок кнопок -->
+            <div class="d-flex justify-content-end" style="margin-bottom:15px;">
+                <button class="btn btn-primary mr-2" type="submit">Поиск</button>
+                {% if search_query %}
+                    <a href="/" class="btn btn-secondary" style="margin-left:15px;">Сбросить</a>
                 {% endif %}
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
+    
 
     <!-- Список треков -->
-    {% if tracks %}
-        <div class="row">
-            {% for track in tracks %}
-                <div class="col-md-4 mb-3">
-                    <div class="card">
-                        <img src="{{ track.cover_image.url }}" class="card-img-top" alt="Обложка">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ track.title }}</h5>
-                            <p class="card-text">{{ track.artist }}</p>
-                            <audio controls>
-                                <source src="{{ track.song_file.url }}" type="audio/mpeg">
-                                Ваш браузер не поддерживает аудио.
-                            </audio>
-                        </div>
-                    </div>
+    <div class="row justify-content-center">
+        {% for track in page_obj %}
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="card text-center" style="width: 100%; max-width: 20rem; padding: 10px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <img src="{{ track.cover_image.url }}" class="card-img-top" alt="Обложка" style="height: 250px; object-fit: cover; border-radius: 5px;">
+                <div class="card-body">
+                    <h5 class="card-title text-truncate" style="font-weight: bold;">{{ track.title }}</h5>
+                    <p class="card-text">Артист: {{ track.artist }}</p>
+                    <audio controls style="width: 100%; height: 35px;">
+                        <source src="{{ track.song_file.url }}" type="audio/mpeg">
+                        Ваш браузер не поддерживает воспроизведение аудио.
+                    </audio>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    {% else %}
-        <p>Треков не найдено.</p>
-    {% endif %}
+        {% empty %}
+        <p>Нет треков для отображения.</p>
+        {% endfor %}
+    </div>
+    
+
+    <!-- Пагинация -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <!-- Кнопка "На первую страницу" (не отображается на первой странице) -->
+            {% if page_obj.number > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&q={{ search_query }}">Первая</a>
+            </li>
+            {% endif %}
+    
+            <!-- Кнопка "Назад" (отображается только если есть предыдущая страница) -->
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}">Назад</a>
+            </li>
+            {% endif %}
+    
+            <!-- Номера страниц -->
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}&q={{ search_query }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+    
+            <!-- Кнопка "Вперед" (отображается только если есть следующая страница) -->
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ search_query }}">Вперед</a>
+            </li>
+            {% endif %}
+    
+            <!-- Кнопка "На последнюю страницу" (не отображается на последней странице) -->
+            {% if page_obj.number < page_obj.paginator.num_pages %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}">Последняя</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+
 </div>
 {% endblock %}

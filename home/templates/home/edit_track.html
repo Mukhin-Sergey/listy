@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактировать трек{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert  alert-danger alert-{{ message.tags }}" role="alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+    <h1>Редактировать трек</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="title" class="form-label">Название трека</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ track.title }}">
+        </div>
+        <div class="mb-3">
+            <label for="artist" class="form-label">Артист</label>
+            <input type="text" class="form-control" id="artist" name="artist" value="{{ track.artist }}">
+            <small class="text-muted">Имя артиста должно совпадать с зарегистрированным никнеймом пользователя.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="/" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}
